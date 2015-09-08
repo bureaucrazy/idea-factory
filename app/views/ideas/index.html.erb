@@ -4,8 +4,8 @@
     <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
   <% end %>
 
-  <%= link_to "order by title", ideas_path(search: params[:search], order: "title") %>
-  <%= link_to "order by body", ideas_path(search: params[:search], order: "body") %>
+  <%#= link_to "order by title", ideas_path(search: params[:search], order: "title") %>
+  <%#= link_to "order by body", ideas_path(search: params[:search], order: "body") %>
 </ul>
 
 <%= link_to "New Idea", new_idea_path, class: "btn btn-primary" %>
@@ -21,7 +21,7 @@
       <% text = "#{i.body}" %><%= text %>
     </p>
     <p>
-      <em>By <%= i.user_name %> on <%= formatted_date(i.updated_at) %></em>
+      <em>By <%= mail_to i.user.email, i.user_name %> on <%= formatted_date(i.updated_at) %></em>
       <% if user_signed_in? %>
         <% if current_user.joined_idea? (i) %>
           <%= link_to "Joined", idea_join_path(i, i.join_for(current_user)),
