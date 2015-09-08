@@ -1,0 +1,46 @@
+<ul class="nav navbar-right">
+  <%= form_for ideas_path, method: :get do %>
+    <%= search_field_tag :search, params[:search] %>
+    <%= submit_tag "Search", class: "btn btn-primary btn-sm" %>
+  <% end %>
+
+  <%= link_to "order by title", ideas_path(search: params[:search], order: "title") %>
+  <%= link_to "order by body", ideas_path(search: params[:search], order: "body") %>
+</ul>
+
+<%= link_to "New Idea", new_idea_path, class: "btn btn-primary" %>
+
+<% @ideas.each do |i| %>
+<hr>
+  <div>
+    <p>
+      <% text = "#{i.title}" %>
+      <%= link_to( text, idea_path(i) ) %>
+    </p>
+    <p>
+      <% text = "#{i.body}" %><%= text %>
+    </p>
+    <p>
+      <em>By <%= i.user_name %> on <%= formatted_date(i.updated_at) %></em>
+      <% if user_signed_in? %>
+        <% if current_user.joined_idea? (i) %>
+          <%= link_to "Joined", idea_join_path(i, i.join_for(current_user)),
+              class: "btn btn-xs btn-primary", title: "Left idea.", method: :delete %>
+        <% else %>
+          <%= link_to "Join", idea_joins_path(i),
+              class: "btn btn-xs btn-primary", method: :post %>
+        <% end %>
+        <% if current_user.liked_idea?(i) %>
+          <%= link_to "Liked", idea_like_path(i, i.like_for(current_user)),
+              class: "btn btn-xs btn-primary", title: "Un-Like", method: :delete %>
+        <% else %>
+          <%= link_to "Like", idea_likes_path(i),
+              class: "btn btn-xs btn-primary", method: :post %>
+        <% end %>
+      <% end %>
+      <p class="text-right">
+        Members: <%= i.joins.count %> | Likes: <%= i.likes.count %>
+      </p>
+    </p>
+  </div>
+<% end %>
